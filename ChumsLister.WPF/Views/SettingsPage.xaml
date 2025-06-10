@@ -1,0 +1,153 @@
+﻿<Page x:Class="ChumsLister.WPF.Views.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Settings">
+
+    <Grid>
+        <TabControl>
+
+            <!-- ───────────── Tab 1: General Settings ───────────── -->
+            <TabItem Header="General">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="20" Width="400">
+                        <TextBlock Text="User Settings" FontSize="20" FontWeight="Bold" Margin="0,0,0,10"/>
+
+                        <!-- existing fields… -->
+                        <TextBlock Text="API Key:" Margin="0,5,0,0"/>
+                        <PasswordBox x:Name="txtApiKey" Height="30"/>
+
+                        <TextBlock Text="User Name:" Margin="0,10,0,0"/>
+                        <TextBox x:Name="txtUserName" Height="25"/>
+
+                        <TextBlock Text="Email Address:" Margin="0,10,0,0"/>
+                        <TextBox x:Name="txtEmailAddress" Height="25"/>
+
+                        <TextBlock Text="Default Category:" Margin="0,10,0,0"/>
+                        <TextBox x:Name="txtDefaultCategory" Height="25"/>
+
+                        <CheckBox x:Name="chkDarkMode" Content="Use Dark Mode" Margin="0,10,0,0"/>
+                        <CheckBox x:Name="chkAutoSync" Content="Auto-Sync Inventory" Margin="0,5,0,0"/>
+                        <CheckBox x:Name="chkEnableAI" Content="Enable AI Features" Margin="0,5,0,0"/>
+
+                        <TextBlock Text="Description Style:" Margin="0,10,0,0"/>
+                        <ComboBox x:Name="cboDescriptionStyle" Height="25">
+                            <ComboBoxItem Content="Detailed"/>
+                            <ComboBoxItem Content="Concise"/>
+                            <ComboBoxItem Content="Bullet Points"/>
+                        </ComboBox>
+
+                        <CheckBox x:Name="chkIncludeShipping" Content="Include Shipping by Default" Margin="0,10,0,0"/>
+                        <CheckBox x:Name="chkAutoCalculateShipping" Content="Auto-Calculate Shipping" Margin="0,5,0,0"/>
+                        <CheckBox x:Name="chkAutomaticUpdates" Content="Automatic Updates" Margin="0,10,0,0"/>
+                        <CheckBox x:Name="chkCheckInventory" Content="Check Inventory Before Listing" Margin="0,5,0,0"/>
+
+                        <Button x:Name="btnSave"
+                      Content="Save Settings"
+                      Width="120" Height="30"
+                      Margin="0,20,0,0"
+                      Click="btnSave_Click"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- ───────────── Tab 2: Listing Templates ───────────── -->
+            <TabItem Header="Listing Templates">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="20" Width="400">
+
+                        <TextBlock Text="Policies" FontSize="16" FontWeight="Bold" Margin="0,0,0,5"/>
+                        <TextBlock Text="Shipping Policy ID:"/>
+                        <TextBox x:Name="txtShippingPolicyId" Height="25"/>
+
+                        <TextBlock Text="Payment Policy ID:" Margin="0,10,0,0"/>
+                        <TextBox x:Name="txtPaymentPolicyId" Height="25"/>
+
+                        <TextBlock Text="Return Policy ID:" Margin="0,10,0,0"/>
+                        <TextBox x:Name="txtReturnPolicyId" Height="25"/>
+
+                        <Separator Margin="0,20"/>
+
+                        <TextBlock Text="Categories" FontSize="16" FontWeight="Bold" Margin="0,0,0,5"/>
+                        <TextBlock Text="Main eBay Category:"/>
+                        <TextBox x:Name="txtMainEbayCategory" Height="25"/>
+
+                        <TextBlock Text="Store Category:" Margin="0,10,0,0"/>
+                        <TextBox x:Name="txtStoreCategory" Height="25"/>
+
+                        <Separator Margin="0,20"/>
+
+                        <TextBlock Text="Listing Preferences" FontSize="16" FontWeight="Bold" Margin="0,0,0,5"/>
+                        <TextBlock Text="Listing Type:"/>
+                        <ComboBox x:Name="cboListingType" Height="25">
+                            <ComboBoxItem Content="FixedPriceItem"/>
+                            <ComboBoxItem Content="Auction"/>
+                        </ComboBox>
+
+                        <TextBlock Text="Duration:" Margin="0,10,0,0"/>
+                        <ComboBox x:Name="cboDuration" Height="25">
+                            <ComboBoxItem Content="GTC"/>
+                            <ComboBoxItem Content="7 Days"/>
+                            <ComboBoxItem Content="30 Days"/>
+                        </ComboBox>
+
+                        <TextBlock Text="Handling Time (days):" Margin="0,10,0,0"/>
+                        <TextBox x:Name="txtHandlingTime" Height="25"/>
+
+                        <TextBlock Text="Item Location:" Margin="0,10,0,0"/>
+                        <TextBox x:Name="txtItemLocation" Height="25"/>
+
+                        <TextBlock Text="Payment Methods (comma separated):" Margin="0,10,0,0"/>
+                        <TextBox x:Name="txtPaymentMethods"
+                       Height="60"
+                       AcceptsReturn="True"
+                       TextWrapping="Wrap"/>
+
+                        <Separator Margin="0,20"/>
+
+                        <TextBlock Text="Description Template" FontSize="16" FontWeight="Bold" Margin="0,0,0,5"/>
+                        <TextBox x:Name="txtDescriptionTemplate"
+                       Height="150"
+                       AcceptsReturn="True"
+                       TextWrapping="Wrap"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- ───────────── Tab 3: eBay Connection ───────────── -->
+            <TabItem Header="eBay Account">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="20" Width="400">
+                        <TextBlock Text="eBay Account Connection" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,10"/>
+
+                        <Button x:Name="btnLoginToEbay"
+                      Content="Login to eBay"
+                      Width="120" Height="30"
+                      Margin="0,0,0,10"
+                      Click="btnLoginToEbay_Click"/>
+
+                        <TextBlock Text="After login, paste the full redirect URL here:"
+                         TextWrapping="Wrap"
+                         Margin="0,0,0,5"/>
+
+                        <TextBox x:Name="txtEbayCode"
+                       Height="30"
+                       Margin="0,0,0,10"/>
+
+                        <Button x:Name="btnSubmitEbayCode"
+                      Content="Submit Code"
+                      Width="100" Height="30"
+                      Margin="0,0,0,10"
+                      Click="btnSubmitEbayCode_Click"/>
+
+                        <Label x:Name="lblEbayStatus"
+                     Content="eBay: Not Connected"
+                     Foreground="DarkGreen"
+                     FontWeight="Bold"
+                     Margin="0,10,0,0"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+</Page>

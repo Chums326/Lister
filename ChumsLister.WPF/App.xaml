@@ -1,0 +1,23 @@
+﻿<Application x:Class="ChumsLister.WPF.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:conv="clr-namespace:ChumsLister.WPF.Converters">
+    <Application.Resources>
+        <!-- your merged dictionaries, e.g.
+    <ResourceDictionary.MergedDictionaries>
+      <ResourceDictionary Source="/ChumsLister.WPF;component/Theme/Styles.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+    -->
+
+        <!-- register all of your converters here -->
+        <conv:BooleanToVisibilityConverter       x:Key="BooleanToVisibilityConverter"/>
+        <conv:BoolToVisibilityInverseConverter   x:Key="BoolToVisibilityInverseConverter"/>
+        <conv:StringToVisibilityConverter        x:Key="StringToVisibilityConverter"/>
+        <conv:BoolToColorConverter               x:Key="BoolToColorConverter"/>
+        <conv:BoolToImageTypeConverter           x:Key="BoolToImageTypeConverter"/>
+        <conv:LoadingStatusConverter             x:Key="LoadingStatusConverter"/>
+        <conv:LoadedStatusConverter              x:Key="LoadedStatusConverter"/>
+        <conv:ErrorStatusConverter               x:Key="ErrorStatusConverter"/>
+        <conv:StatusToVisibilityConverter        x:Key="StatusToVisibilityConverter"/>
+    </Application.Resources>
+</Application>

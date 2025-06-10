@@ -1,0 +1,160 @@
+﻿<Page x:Class="ChumsLister.WPF.Views.Wizards.ItemSpecificsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Item Specifics">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="Item Specifics" Style="{StaticResource TitleStyle}"/>
+            <TextBlock Text="Provide detailed information about your item" 
+                       Margin="0,0,0,20" Foreground="{StaticResource TextMediumBrush}"/>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1">
+            <StackPanel>
+                <!-- Required Specifics -->
+                <Border Style="{StaticResource CardStyle}" Padding="15">
+                    <StackPanel>
+                        <TextBlock Text="Required Item Specifics" 
+                                   Style="{StaticResource SubtitleStyle}"/>
+                        <TextBlock Text="These specifics are required for your selected category" 
+                                   Foreground="{StaticResource TextMediumBrush}"
+                                   Margin="0,5,0,15"/>
+
+                        <ItemsControl x:Name="requiredSpecifics" 
+                                      ItemsSource="{Binding RequiredSpecifics}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,0,0,15">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="200"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBlock Grid.Column="0" 
+                                                   Text="{Binding Name}" 
+                                                   FontWeight="SemiBold"
+                                                   VerticalAlignment="Center"/>
+
+                                        <!-- Different control types based on SelectionMode -->
+                                        <ContentControl Grid.Column="1" 
+                                                        Content="{Binding}"
+                                                        Margin="10,0,0,0">
+                                            <ContentControl.Style>
+                                                <Style TargetType="ContentControl">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding SelectionMode}" 
+                                                                     Value="SelectionOnly">
+                                                            <Setter Property="ContentTemplate">
+                                                                <Setter.Value>
+                                                                    <DataTemplate>
+                                                                        <ComboBox ItemsSource="{Binding ValueRecommendations}"
+                                                                                  SelectedItem="{Binding SelectedValue}"
+                                                                                  Style="{StaticResource ComboBoxStyle}"/>
+                                                                    </DataTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding SelectionMode}" 
+                                                                     Value="FreeText">
+                                                            <Setter Property="ContentTemplate">
+                                                                <Setter.Value>
+                                                                    <DataTemplate>
+                                                                        <TextBox Text="{Binding Value}"
+                                                                                 Style="{StaticResource TextBoxStyle}"/>
+                                                                    </DataTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </ContentControl.Style>
+                                        </ContentControl>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </Border>
+
+                <!-- Recommended Specifics -->
+                <Border Style="{StaticResource CardStyle}" 
+                        Padding="15" 
+                        Margin="0,15,0,0">
+                    <StackPanel>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" 
+                                       Text="Additional Item Specifics" 
+                                       Style="{StaticResource SubtitleStyle}"/>
+
+                            <Button Grid.Column="1" 
+                                    x:Name="btnAddSpecific" 
+                                    Content="Add Custom" 
+                                    Style="{StaticResource OutlineButtonStyle}"
+                                    Click="btnAddSpecific_Click"/>
+                        </Grid>
+
+                        <TextBlock Text="Add more details to help buyers find your item" 
+                                   Foreground="{StaticResource TextMediumBrush}"
+                                   Margin="0,5,0,15"/>
+
+                        <DataGrid x:Name="gridAdditionalSpecifics" 
+                                  AutoGenerateColumns="False" 
+                                  Height="200"
+                                  CanUserAddRows="False"
+                                  BorderBrush="{StaticResource BorderBrush}"
+                                  BorderThickness="1">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Name" 
+                                                    Binding="{Binding Name}" 
+                                                    Width="200"/>
+                                <DataGridTextColumn Header="Value" 
+                                                    Binding="{Binding Value}" 
+                                                    Width="*"/>
+                                <DataGridTemplateColumn Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Remove" 
+                                                    Margin="5,0" 
+                                                    Style="{StaticResource OutlineButtonStyle}"
+                                                    Click="btnRemoveSpecific_Click"
+                                                    CommandParameter="{Binding}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </StackPanel>
+                </Border>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="2" Style="{StaticResource CardStyle}" 
+                Background="#FFF8E0" 
+                Padding="15" 
+                Margin="0,15,0,0">
+            <StackPanel>
+                <TextBlock Text="Item Specifics Tips:" 
+                           FontWeight="SemiBold" 
+                           Margin="0,0,0,5"/>
+                <TextBlock TextWrapping="Wrap">
+                    • Complete all required specifics for better search visibility
+                    • Use recommended values when available
+                    • Be accurate and detailed to reduce returns
+                    • Add custom specifics for unique features
+                </TextBlock>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Page>

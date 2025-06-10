@@ -1,0 +1,58 @@
+﻿<Window x:Class="ChumsLister.WPF.Views.OrderDetailsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Order Details" Height="500" Width="650">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="Order Details" FontSize="24" FontWeight="Bold" Margin="0,0,0,20"/>
+
+            <UniformGrid Columns="2" Rows="0" Margin="0,0,0,10">
+                <TextBlock FontWeight="Bold" Text="Order ID:"/>
+                <TextBlock Text="{Binding OrderId}"/>
+
+                <TextBlock FontWeight="Bold" Text="SKU:"/>
+                <TextBlock Text="{Binding SKU}"/>
+
+                <TextBlock FontWeight="Bold" Text="Buyer Username:"/>
+                <TextBlock Text="{Binding BuyerName}"/>
+
+                <TextBlock FontWeight="Bold" Text="Item Title:"/>
+                <TextBlock Text="{Binding ItemTitle}"/>
+
+                <TextBlock FontWeight="Bold" Text="Sale Date:"/>
+                <TextBlock Text="{Binding OrderDate, StringFormat='{}{0:g}'}"/>
+
+                <TextBlock FontWeight="Bold" Text="Total Amount:"/>
+                <TextBlock Text="{Binding OrderTotal, StringFormat='{}{0:C}'}"/>
+
+                <TextBlock FontWeight="Bold" Text="Payment Status:"/>
+                <TextBlock Text="{Binding PaymentStatus}"/>
+
+                <TextBlock FontWeight="Bold" Text="Shipping Status:"/>
+                <TextBlock Text="{Binding ShippingStatus}"/>
+
+                <TextBlock FontWeight="Bold" Text="Tracking Number:"/>
+                <TextBlock Text="{Binding TrackingNumber}"/>
+
+                <TextBlock FontWeight="Bold" Text="Shipping Address:"/>
+                <TextBlock Text="{Binding BuyerAddress}"/>
+            </UniformGrid>
+
+            <TextBlock FontWeight="Bold" Text="Notes:" Margin="0,10,0,5"/>
+            <ItemsControl ItemsSource="{Binding Notes}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding Text}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+        <Button Grid.Row="1" Content="Close" Width="100" Height="35" HorizontalAlignment="Right" Margin="0,20,0,0" Click="Close_Click"/>
+    </Grid>
+</Window>

@@ -1,0 +1,155 @@
+﻿<Page x:Class="ChumsLister.WPF.Views.Wizards.CategorySelectionPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="clr-namespace:ChumsLister.WPF.Views.Wizards"
+      Title="Category Selection">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="Select Categories" 
+                       Style="{StaticResource TitleStyle}"/>
+            <TextBlock Text="Choose the best categories for your item" 
+                       Margin="0,0,0,20" 
+                       Foreground="{StaticResource TextMediumBrush}"/>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- ================= LEFT COLUMN: eBay Categories ================= -->
+                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                    <TextBlock Text="Primary Category" 
+                               Style="{StaticResource SubtitleStyle}"/>
+
+                    <!-- (Optional) Category Search -->
+                    <Grid Margin="0,10,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="txtCategorySearch" 
+                                 Style="{StaticResource TextBoxStyle}"
+                                 Grid.Column="0" 
+                                 Margin="0,0,10,0"
+                                 Text="Search or browse categories..."/>
+                        <Button x:Name="btnSuggestCategory" 
+                                Content="Suggest" 
+                                Grid.Column="1"
+                                Style="{StaticResource AccentButtonStyle}"
+                                Click="btnSuggestCategory_Click"/>
+                    </Grid>
+
+                    <!-- Category Tree (Root + lazy children) -->
+                    <TreeView x:Name="treeCategories" 
+                              Height="300" 
+                              Margin="0,10,0,0"
+                              BorderBrush="{StaticResource BorderBrush}"
+                              BorderThickness="1"
+                              SelectedItemChanged="TreeCategories_SelectedItemChanged">
+                        <TreeView.Resources>
+                            <!-- Now that CategoryNode is public, we can do: -->
+                            <HierarchicalDataTemplate DataType="{x:Type local:CategoryNode}"
+                                                      ItemsSource="{Binding Children}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding CategoryName}" Margin="5,2"/>
+                                    <TextBlock Text="{Binding CategoryId, StringFormat=' ({0})'}" 
+                                               Foreground="{StaticResource TextMediumBrush}"
+                                               FontSize="11"/>
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeView.Resources>
+                    </TreeView>
+
+                    <!-- Selected Primary Category -->
+                    <Border Style="{StaticResource CardStyle}" 
+                            Padding="10" 
+                            Margin="0,10,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Selected Primary Category:" 
+                                       FontWeight="SemiBold"/>
+                            <TextBlock x:Name="txtSelectedPrimary" 
+                                       Text="None selected" 
+                                       Margin="0,5,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <!-- Secondary Category Toggle -->
+                    <CheckBox x:Name="chkSecondaryCategory" 
+                              Content="Add Secondary Category" 
+                              Margin="0,15,0,5"
+                              Checked="chkSecondaryCategory_Checked"
+                              Unchecked="chkSecondaryCategory_Unchecked"/>
+
+                    <!-- Secondary Category Tree (hidden until checked) -->
+                    <TreeView x:Name="treeSecondaryCategories" 
+                              Height="200" 
+                              Visibility="Collapsed"
+                              BorderBrush="{StaticResource BorderBrush}"
+                              BorderThickness="1"
+                              SelectedItemChanged="TreeSecondaryCategories_SelectedItemChanged">
+                        <TreeView.Resources>
+                            <HierarchicalDataTemplate DataType="{x:Type local:CategoryNode}"
+                                                      ItemsSource="{Binding Children}">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding CategoryName}" Margin="5,2"/>
+                                    <TextBlock Text="{Binding CategoryId, StringFormat=' ({0})'}" 
+                                               Foreground="{StaticResource TextMediumBrush}"
+                                               FontSize="11"/>
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
+                        </TreeView.Resources>
+                    </TreeView>
+                </StackPanel>
+
+                <!-- ================= RIGHT COLUMN: Store Categories ================= -->
+                <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                    <TextBlock Text="Store Categories" 
+                               Style="{StaticResource SubtitleStyle}"/>
+                    <TextBlock Text="Select up to 2 store categories (optional)" 
+                               Foreground="{StaticResource TextMediumBrush}"
+                               Margin="0,5,0,10"/>
+
+                    <ListBox x:Name="listStoreCategories" 
+                             Height="300"
+                             SelectionMode="Multiple"
+                             BorderBrush="{StaticResource BorderBrush}"
+                             BorderThickness="1">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <CheckBox Content="{Binding CategoryName}" 
+                                          Tag="{Binding CategoryId}"
+                                          IsChecked="{Binding IsSelected}"
+                                          Margin="5,2"/>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+
+                    <!-- Category Features (displayed after primary selection) -->
+                    <Border Style="{StaticResource CardStyle}" 
+                            Background="#F0F8FF" 
+                            Padding="10" 
+                            Margin="0,15,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Category Features:" 
+                                       FontWeight="SemiBold" 
+                                       Margin="0,0,0,5"/>
+                            <TextBlock x:Name="txtCategoryFeatures" 
+                                       TextWrapping="Wrap">
+                                Select a primary category to see available features
+                            </TextBlock>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Page>

@@ -1,0 +1,237 @@
+﻿<Page x:Class="ChumsLister.WPF.Views.Wizards.PricingAndQuantityPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Pricing and Quantity">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="Pricing and Quantity" Style="{StaticResource TitleStyle}"/>
+            <TextBlock Text="Set competitive pricing and inventory levels" 
+                       Margin="0,0,0,20" Foreground="{StaticResource TextMediumBrush}"/>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Column: Pricing -->
+                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                    <Border Style="{StaticResource CardStyle}" Padding="15">
+                        <StackPanel>
+                            <TextBlock Text="Listing Format and Pricing" 
+                                       Style="{StaticResource SubtitleStyle}"/>
+
+                            <TextBlock Text="Listing Format:" 
+                                       FontWeight="SemiBold" 
+                                       Margin="0,15,0,5"/>
+                            <ComboBox x:Name="cboListingType" 
+                                      Style="{StaticResource ComboBoxStyle}"
+                                      SelectionChanged="cboListingType_SelectionChanged">
+                                <ComboBoxItem Content="Fixed Price" Tag="FixedPriceItem"/>
+                                <ComboBoxItem Content="Auction" Tag="Chinese"/>
+                                <ComboBoxItem Content="Auction with Buy It Now" Tag="ChineseBuyItNow"/>
+                            </ComboBox>
+
+                            <!-- Fixed Price Fields -->
+                            <StackPanel x:Name="pnlFixedPrice">
+                                <TextBlock Text="Buy It Now Price:" 
+                                           FontWeight="SemiBold" 
+                                           Margin="0,15,0,5"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="$" 
+                                               Grid.Column="0" 
+                                               VerticalAlignment="Center" 
+                                               FontWeight="SemiBold" 
+                                               Margin="5,0"/>
+                                    <TextBox x:Name="txtBuyItNowPrice" 
+                                             Grid.Column="1" 
+                                             Style="{StaticResource TextBoxStyle}"/>
+                                </Grid>
+                            </StackPanel>
+
+                            <!-- Auction Fields -->
+                            <StackPanel x:Name="pnlAuction" 
+                                        Visibility="Collapsed">
+                                <TextBlock Text="Starting Bid:" 
+                                           FontWeight="SemiBold" 
+                                           Margin="0,15,0,5"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="$" 
+                                               Grid.Column="0" 
+                                               VerticalAlignment="Center" 
+                                               FontWeight="SemiBold" 
+                                               Margin="5,0"/>
+                                    <TextBox x:Name="txtStartingBid" 
+                                             Grid.Column="1" 
+                                             Style="{StaticResource TextBoxStyle}"/>
+                                </Grid>
+
+                                <CheckBox x:Name="chkReservePrice" 
+                                          Content="Set Reserve Price" 
+                                          Margin="0,15,0,5"/>
+                                <Grid x:Name="pnlReservePrice" 
+                                      Visibility="Collapsed">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="$" 
+                                               Grid.Column="0" 
+                                               VerticalAlignment="Center" 
+                                               FontWeight="SemiBold" 
+                                               Margin="5,0"/>
+                                    <TextBox x:Name="txtReservePrice" 
+                                             Grid.Column="1" 
+                                             Style="{StaticResource TextBoxStyle}"/>
+                                </Grid>
+                            </StackPanel>
+
+                            <!-- Best Offer -->
+                            <CheckBox x:Name="chkBestOffer" 
+                                      Content="Accept Best Offers" 
+                                      Margin="0,15,0,5"
+                                      Checked="chkBestOffer_Checked"
+                                      Unchecked="chkBestOffer_Unchecked"/>
+
+                            <StackPanel x:Name="pnlBestOffer" 
+                                        Visibility="Collapsed">
+                                <TextBlock Text="Auto-accept price:" 
+                                           FontWeight="SemiBold" 
+                                           Margin="0,10,0,5"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="$" 
+                                               Grid.Column="0" 
+                                               VerticalAlignment="Center" 
+                                               FontWeight="SemiBold" 
+                                               Margin="5,0"/>
+                                    <TextBox x:Name="txtAutoAcceptPrice" 
+                                             Grid.Column="1" 
+                                             Style="{StaticResource TextBoxStyle}"/>
+                                </Grid>
+
+                                <TextBlock Text="Auto-decline price:" 
+                                           FontWeight="SemiBold" 
+                                           Margin="0,10,0,5"/>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="$" 
+                                               Grid.Column="0" 
+                                               VerticalAlignment="Center" 
+                                               FontWeight="SemiBold" 
+                                               Margin="5,0"/>
+                                    <TextBox x:Name="txtAutoDeclinePrice" 
+                                             Grid.Column="1" 
+                                             Style="{StaticResource TextBoxStyle}"/>
+                                </Grid>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- Right Column: Quantity and Duration -->
+                <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                    <Border Style="{StaticResource CardStyle}" Padding="15">
+                        <StackPanel>
+                            <TextBlock Text="Quantity and Duration" 
+                                       Style="{StaticResource SubtitleStyle}"/>
+
+                            <TextBlock Text="Quantity Available:" 
+                                       FontWeight="SemiBold" 
+                                       Margin="0,15,0,5"/>
+                            <TextBox x:Name="txtQuantity" 
+                                     Style="{StaticResource TextBoxStyle}"
+                                     Text="1"/>
+
+                            <CheckBox x:Name="chkLotSize" 
+                                      Content="Selling in lots" 
+                                      Margin="0,15,0,5"
+                                      Checked="chkLotSize_Checked"
+                                      Unchecked="chkLotSize_Unchecked"/>
+
+                            <Grid x:Name="pnlLotSize" 
+                                  Visibility="Collapsed">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Items per lot:" 
+                                           Grid.Column="0" 
+                                           VerticalAlignment="Center" 
+                                           Margin="0,0,10,0"/>
+                                <TextBox x:Name="txtLotSize" 
+                                         Grid.Column="1" 
+                                         Style="{StaticResource TextBoxStyle}"/>
+                            </Grid>
+
+                            <TextBlock Text="Listing Duration:" 
+                                       FontWeight="SemiBold" 
+                                       Margin="0,15,0,5"/>
+                            <ComboBox x:Name="cboDuration" 
+                                      Style="{StaticResource ComboBoxStyle}">
+                                <ComboBoxItem Content="Good 'Til Cancelled (GTC)" Tag="GTC"/>
+                                <ComboBoxItem Content="30 Days" Tag="Days_30"/>
+                                <ComboBoxItem Content="10 Days" Tag="Days_10"/>
+                                <ComboBoxItem Content="7 Days" Tag="Days_7"/>
+                                <ComboBoxItem Content="5 Days" Tag="Days_5"/>
+                                <ComboBoxItem Content="3 Days" Tag="Days_3"/>
+                                <ComboBoxItem Content="1 Day" Tag="Days_1"/>
+                            </ComboBox>
+
+                            <CheckBox x:Name="chkPrivateListing" 
+                                      Content="Private Listing" 
+                                      Margin="0,15,0,0"
+                                      ToolTip="Hide buyer's identity from others"/>
+
+                            <CheckBox x:Name="chkImmediatePayment" 
+                                      Content="Require Immediate Payment" 
+                                      Margin="0,10,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource CardStyle}" 
+                            Background="#F0F8FF" 
+                            Padding="15" 
+                            Margin="0,15,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Pricing Research:" 
+                                       FontWeight="SemiBold" 
+                                       Margin="0,0,0,5"/>
+                            <Button x:Name="btnResearchPricing" 
+                                    Content="Research Similar Items" 
+                                    Style="{StaticResource AccentButtonStyle}"
+                                    HorizontalAlignment="Left"
+                                    Margin="0,10,0,10"
+                                    Click="btnResearchPricing_Click"/>
+                            <TextBlock x:Name="txtPricingResearch" 
+                                       TextWrapping="Wrap"
+                                       Text="Click to research current market prices"/>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Page>

@@ -1,0 +1,171 @@
+﻿<Page x:Class="ChumsLister.WPF.Views.ListingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Listings">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Hidden Controls for code-behind compatibility -->
+        <Grid Visibility="Collapsed">
+            <DataGrid x:Name="listingsDataGrid" AutoGenerateColumns="False" IsReadOnly="True"/>
+            <StackPanel x:Name="loadingSpinner" Visibility="Collapsed">
+                <TextBlock Text="Loading..."/>
+                <ProgressBar IsIndeterminate="True" Width="200" Height="20"/>
+            </StackPanel>
+            <StackPanel x:Name="detailsLoadingSpinner" Visibility="Collapsed">
+                <TextBlock Text="Loading details..."/>
+                <ProgressBar IsIndeterminate="True" Width="200" Height="20"/>
+            </StackPanel>
+            <TextBox x:Name="txtSearch" TextChanged="txtSearch_TextChanged"/>
+        </Grid>
+
+        <!-- Visible Content -->
+        <ScrollViewer Grid.Row="0" Grid.RowSpan="2">
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Page Header -->
+                <TextBlock Grid.Row="0" Text="Manage Listings" Style="{StaticResource TitleStyle}"/>
+
+                <!-- Button and Scrape Section -->
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Create Listing Button -->
+                    <StackPanel Grid.Column="0">
+                        <Button Content="Create Listing" Click="btnCreateListing_Click" 
+                                Width="180" Height="40" Margin="0,0,0,20" HorizontalAlignment="Left"
+                                Style="{StaticResource GruffinButtonStyle}"/>
+
+                        <!-- Scrape Section -->
+                        <Border Style="{StaticResource CardStyle}" Padding="15">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Grid.Column="0" Grid.Row="0">
+                                    <TextBlock Text="Enter Product URL:" FontWeight="SemiBold" Margin="0,0,0,5"/>
+                                    <TextBox x:Name="txtProductUrl" Style="{StaticResource TextBoxStyle}" 
+                                             MinWidth="400" Margin="0,0,10,0"/>
+                                </StackPanel>
+
+                                <Button Grid.Column="1" Grid.Row="0" Content="Retrieve Product Info" 
+                                        Click="btnScrape_Click" VerticalAlignment="Bottom"
+                                        Style="{StaticResource GruffinButtonStyle}"/>
+
+                                <TextBlock Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" 
+                                           Text="Enter a product URL to import data automatically" 
+                                           Foreground="{StaticResource LightTextBrush}" 
+                                           Margin="0,5,0,0" FontStyle="Italic"/>
+                            </Grid>
+                        </Border>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Product Details Section -->
+                <Border Grid.Row="2" Style="{StaticResource CardStyle}" Margin="0,20,0,0" Padding="15">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Text="Product Details" 
+                                   Style="{StaticResource SubtitleStyle}"/>
+
+                        <ScrollViewer Grid.Row="1">
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <!-- Left Column -->
+                                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                    <TextBlock Text="Title:" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                                    <TextBox x:Name="txtTitle" Style="{StaticResource TextBoxStyle}" Margin="0,3,0,10"/>
+
+                                    <TextBlock Text="Model Number:" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                                    <TextBox x:Name="txtModelNumber" Style="{StaticResource TextBoxStyle}" Margin="0,3,0,10"/>
+
+                                    <TextBlock Text="Price:" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                                    <TextBox x:Name="txtPrice" Style="{StaticResource TextBoxStyle}" Margin="0,3,0,10"/>
+
+                                    <TextBlock Text="Category:" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                                    <TextBox x:Name="txtCategory" Style="{StaticResource TextBoxStyle}" Margin="0,3,0,10"/>
+
+                                    <TextBlock Text="Item Type:" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                                    <TextBox x:Name="txtItemType" Style="{StaticResource TextBoxStyle}" Margin="0,3,0,10"/>
+
+                                    <TextBlock Text="Condition:" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                                    <TextBox x:Name="txtCondition" Style="{StaticResource TextBoxStyle}" Margin="0,3,0,10"/>
+
+                                    <TextBlock Text="Brand:" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                                    <TextBox x:Name="txtBrand" Style="{StaticResource TextBoxStyle}" Margin="0,3,0,10"/>
+
+                                    <TextBlock Text="Dimensions:" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                                    <TextBox x:Name="txtDimensions" Style="{StaticResource TextBoxStyle}" 
+                                             Margin="0,3,0,10" AcceptsReturn="True" TextWrapping="Wrap" Height="60"/>
+                                </StackPanel>
+
+                                <!-- Right Column -->
+                                <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                    <TextBlock Text="Description:" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                                    <TextBox x:Name="txtDescription" Style="{StaticResource TextBoxStyle}" 
+                                             Margin="0,3,0,10" AcceptsReturn="True" Height="100" TextWrapping="Wrap"/>
+
+                                    <TextBlock Text="Features:" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                                    <TextBox x:Name="txtFeatures" Style="{StaticResource TextBoxStyle}" 
+                                             Margin="0,3,0,10" AcceptsReturn="True" Height="100" TextWrapping="Wrap"/>
+
+                                    <TextBlock Text="Specifications:" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                                    <TextBox x:Name="txtSpecifications" Style="{StaticResource TextBoxStyle}" 
+                                             Margin="0,3,0,10" AcceptsReturn="True" Height="100" TextWrapping="Wrap"/>
+
+                                    <TextBlock Text="Item Specifics:" FontWeight="SemiBold" Margin="0,5,0,0"/>
+                                    <DataGrid x:Name="gridItemSpecifics" AutoGenerateColumns="False" 
+                                              Height="150" Margin="0,3,0,10"
+                                              ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}"
+                                              CellStyle="{StaticResource DataGridCellStyle}">
+                                        <DataGrid.Columns>
+                                            <DataGridTextColumn Header="Name" Binding="{Binding Key}" Width="*"/>
+                                            <DataGridTextColumn Header="Value" Binding="{Binding Value}" Width="*"/>
+                                        </DataGrid.Columns>
+                                    </DataGrid>
+
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+                                        <Button Content="Enhance Description" x:Name="btnEnhanceDescription" 
+                                                Click="btnEnhanceDescription_Click" Margin="0,0,10,0"
+                                                Style="{StaticResource GruffinButtonStyle}"/>
+                                        <Button Content="Optimize Title" x:Name="btnOptimizeTitle" 
+                                                Click="btnOptimizeTitle_Click" Margin="0,0,10,0"
+                                                Style="{StaticResource GruffinButtonStyle}"/>
+                                        <Button Content="Save Listing" x:Name="btnSaveListing" 
+                                                Click="btnSaveListing_Click"
+                                                Style="{StaticResource GruffinButtonStyle}"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Grid>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Page>

@@ -1,0 +1,326 @@
+﻿<Page x:Class="ChumsLister.WPF.Views.ShippingPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:conv="clr-namespace:ChumsLister.WPF.Converters"
+      Title="Shipping">
+
+    <!-- Only the converters this view actually uses -->
+    <Page.Resources>
+        <conv:BooleanToVisibilityConverter    x:Key="BooleanToVisibilityConverter"/>
+        <conv:BoolToVisibilityInverseConverter x:Key="BoolToVisibilityInverseConverter"/>
+    </Page.Resources>
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- Header + Refresh -->
+            <RowDefinition Height="Auto"/>
+            <!-- Pending Orders -->
+            <RowDefinition Height="*"/>
+            <!-- Details & Form -->
+            <RowDefinition Height="Auto"/>
+            <!-- Clear/Cancel -->
+        </Grid.RowDefinitions>
+
+        <!-- Row 0: Title + Refresh -->
+        <DockPanel Grid.Row="0" Margin="0,0,0,15" LastChildFill="False">
+            <TextBlock Text="Shipping" FontSize="24" FontWeight="Bold" DockPanel.Dock="Left"/>
+            <Button Content="Refresh Orders"
+              Padding="8,4"
+              DockPanel.Dock="Right"
+              Command="{Binding LoadPendingOrdersCommand}"
+              IsEnabled="{Binding IsLoading,
+                                  Converter={StaticResource BoolToVisibilityInverseConverter}}"/>
+        </DockPanel>
+
+        <!-- Row 1: Pending Orders -->
+        <StackPanel Grid.Row="1" Margin="0,0,0,15">
+            <TextBlock Text="Orders Needing Shipment"
+                 FontSize="16"
+                 FontWeight="Bold"
+                 Margin="0,0,0,6"/>
+            <ListBox ItemsSource="{Binding PendingOrders}"
+               SelectedItem="{Binding SelectedPendingOrder}"
+               DisplayMemberPath="OrderId"
+               Height="120"
+               FontWeight="Bold"
+               BorderBrush="#CCC"
+               BorderThickness="1"/>
+        </StackPanel>
+
+        <!-- Row 2: Details & Shipping Form -->
+        <Border Grid.Row="2" BorderBrush="Gray" BorderThickness="1" Padding="12">
+            <ScrollViewer>
+                <StackPanel>
+
+                    <!-- Order Details Header -->
+                    <TextBlock Text="Order Details"
+                     FontSize="16"
+                     FontWeight="Bold"
+                     Margin="0,0,0,10"/>
+
+                    <!-- Basic Order Info -->
+                    <TextBlock Text="Order ID:" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding CurrentOrder.OrderId}" Margin="0,0,0,8"/>
+
+                    <TextBlock Text="Name:" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding CurrentOrder.BuyerName}" Margin="0,0,0,8"/>
+
+                    <TextBlock Text="Address:" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding CurrentOrder.BuyerAddress}"
+                     TextWrapping="Wrap"
+                     Margin="0,0,0,12"/>
+
+                    <TextBlock Text="Order Total:" FontWeight="Bold"/>
+                    <TextBlock Text="{Binding CurrentOrder.OrderTotal, StringFormat=C}"
+                     Margin="0,0,0,20"/>
+
+                    <Separator/>
+
+                    <!-- Placeholder when no order is selected -->
+                    <TextBlock Text="Select an order above to configure shipping."
+                     FontStyle="Italic"
+                     Foreground="Gray"
+                     Margin="0,10,0,10"
+                     Visibility="{Binding HasOrder,
+                                  Converter={StaticResource BoolToVisibilityInverseConverter}}"/>
+
+                    <!-- Full shipping form, only visible when HasOrder == true -->
+                    <StackPanel Visibility="{Binding HasOrder,
+                                         Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                        <!-- 1) Shipping Type -->
+                        <TextBlock Text="Shipping Type" FontWeight="Bold" Margin="0,0,0,6"/>
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,12">
+                            <RadioButton x:Name="rbFlatShipping"
+                           Content="Flat Rate"
+                           GroupName="ShippingType"
+                           IsChecked="True"
+                           Checked="ShippingType_Changed"/>
+                            <RadioButton x:Name="rbCalculatedShipping"
+                           Content="Calculated"
+                           GroupName="ShippingType"
+                           Checked="ShippingType_Changed"
+                           Margin="10,0,0,0"/>
+                            <RadioButton x:Name="rbFreightShipping"
+                           Content="Freight"
+                           GroupName="ShippingType"
+                           Checked="ShippingType_Changed"
+                           Margin="10,0,0,0"/>
+                            <RadioButton x:Name="rbLocalPickupOnly"
+                           Content="Local Pickup"
+                           GroupName="ShippingType"
+                           Checked="ShippingType_Changed"
+                           Margin="10,0,0,0"/>
+                        </StackPanel>
+
+                        <!-- 2) Package Details -->
+                        <Border x:Name="pnlPackageDetails"
+                    Background="#FFF5F5F5"
+                    Padding="8"
+                    Margin="0,0,0,12"
+                    CornerRadius="4"
+                    Visibility="Collapsed">
+                            <StackPanel>
+                                <TextBlock Text="Package Details" FontWeight="Bold" Margin="0,0,0,6"/>
+                                <Grid Margin="0,0,0,8">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBox x:Name="txtLength"    ToolTip="Length (in)" Grid.Column="0"/>
+                                    <TextBox x:Name="txtWidth"     ToolTip="Width (in)"  Grid.Column="1"/>
+                                    <TextBox x:Name="txtHeight"    ToolTip="Height (in)" Grid.Column="2"/>
+                                    <TextBox x:Name="txtWeightLbs" ToolTip="Weight lbs"  Grid.Column="3"/>
+                                    <TextBox x:Name="txtWeightOz"  ToolTip="Weight oz"   Grid.Column="4"/>
+                                </Grid>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+                                    <TextBlock Text="Package Type:" VerticalAlignment="Center"/>
+                                    <ComboBox x:Name="cboPackageType"
+                            Width="200"
+                            Margin="6,0,0,0">
+                                        <ComboBoxItem Content="Package/Thick Envelope"/>
+                                        <ComboBoxItem Content="Large Envelope"/>
+                                        <ComboBoxItem Content="Letter"/>
+                                        <ComboBoxItem Content="Large Package"/>
+                                        <ComboBoxItem Content="Extra Large Package"/>
+                                    </ComboBox>
+                                </StackPanel>
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="Handling Time:" VerticalAlignment="Center"/>
+                                    <ComboBox x:Name="cboHandlingTime"
+                            Width="180"
+                            Margin="6,0,0,0">
+                                        <ComboBoxItem Content="Same business day" Tag="0"/>
+                                        <ComboBoxItem Content="1 business day"    Tag="1"/>
+                                        <ComboBoxItem Content="2 business days"   Tag="2"/>
+                                        <ComboBoxItem Content="3 business days"   Tag="3"/>
+                                        <ComboBoxItem Content="5 business days"   Tag="5"/>
+                                        <ComboBoxItem Content="10 business days"  Tag="10"/>
+                                    </ComboBox>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- 3) Domestic Services -->
+                        <TextBlock Text="Domestic Shipping Services"
+                       FontWeight="Bold"
+                       Margin="0,0,0,6"/>
+                        <Button x:Name="btnAddDomesticService"
+                    Content="Add Service"
+                    Width="120"
+                    Click="btnAddDomesticService_Click"/>
+                        <DataGrid x:Name="gridDomesticShipping"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      Margin="0,8,0,12"
+                      Height="120">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="Service"
+                                    Binding="{Binding ShippingServiceName}"
+                                    Width="*"/>
+                                <DataGridTextColumn Header="Cost"
+                                    Binding="{Binding Cost, StringFormat=\${0:F2}}"
+                                    Width="80"/>
+                                <DataGridCheckBoxColumn Header="Free"
+                                        Binding="{Binding FreeShipping}"
+                                        Width="60"/>
+                                <DataGridTemplateColumn Width="Auto">
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
+                                            <Button Content="Remove"
+                              Click="btnRemoveDomesticService_Click"
+                              CommandParameter="{Binding}"/>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
+                            </DataGrid.Columns>
+                        </DataGrid>
+
+                        <!-- 4) International Services -->
+                        <CheckBox x:Name="chkInternationalShipping"
+                      Content="Offer International Shipping"
+                      FontWeight="Bold"
+                      Checked="chkInternationalShipping_Checked"
+                      Unchecked="chkInternationalShipping_Unchecked"/>
+                        <StackPanel x:Name="pnlInternationalShipping"
+                        Visibility="Collapsed"
+                        Margin="0,8,0,12">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="International Services"
+                           FontWeight="Bold"
+                           VerticalAlignment="Center"/>
+                                <Button x:Name="btnAddInternationalService"
+                        Content="Add Service"
+                        Width="120"
+                        Margin="6,0,0,0"
+                        Click="btnAddInternationalService_Click"/>
+                            </StackPanel>
+                            <DataGrid x:Name="gridInternationalShipping"
+                        AutoGenerateColumns="False"
+                        CanUserAddRows="False"
+                        Margin="0,8,0,12"
+                        Height="100">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Service"
+                                      Binding="{Binding ShippingServiceName}"
+                                      Width="*"/>
+                                    <DataGridTextColumn Header="Cost"
+                                      Binding="{Binding Cost, StringFormat=\${0:F2}}"
+                                      Width="80"/>
+                                    <DataGridCheckBoxColumn Header="Free"
+                                          Binding="{Binding FreeShipping}"
+                                          Width="60"/>
+                                    <DataGridTemplateColumn Width="Auto">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Content="Remove"
+                                Click="btnRemoveInternationalService_Click"
+                                CommandParameter="{Binding}"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                            <CheckBox x:Name="chkGlobalShipping"
+                        Content="Use eBay Global Shipping Program"
+                        Margin="0,0,0,8"/>
+                            <TextBlock Text="Exclude Ship To:" FontWeight="Bold" Margin="0,6,0,4"/>
+                            <ListBox x:Name="listExcludeLocations"
+                       SelectionMode="Multiple"
+                       Height="80">
+                                <ListBoxItem Content="Alaska/Hawaii"/>
+                                <ListBoxItem Content="Puerto Rico"/>
+                                <ListBoxItem Content="APO/FPO"/>
+                                <ListBoxItem Content="Europe"/>
+                                <ListBoxItem Content="Asia"/>
+                                <ListBoxItem Content="Oceania"/>
+                                <ListBoxItem Content="Africa"/>
+                                <ListBoxItem Content="South America"/>
+                            </ListBox>
+                        </StackPanel>
+
+                        <!-- 5) Quotes & Purchase -->
+                        <Button Content="Get Quotes"
+                    Command="{Binding RefreshRatesCommand}"
+                    IsEnabled="{Binding HasOrder}"
+                    Width="100"
+                    Margin="0,6,0,6"/>
+
+                        <TextBlock Text="Available Shipping Quotes"
+                       FontWeight="Bold"
+                       Margin="0,6,0,4"/>
+                        <ListBox ItemsSource="{Binding AvailableRates}"
+                     SelectedItem="{Binding SelectedRate}"
+                     Height="140"
+                     BorderBrush="#CCC"
+                     BorderThickness="1"
+                     Margin="0,0,0,12">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel>
+                                        <TextBlock>
+                      <Run Text="{Binding Carrier}"/>
+                      <Run Text=" – "/>
+                      <Run Text="{Binding ServiceName}"/>
+                                        </TextBlock>
+                                        <TextBlock>
+                      <Run Text="{Binding Cost, StringFormat={}{0:C}}"/>
+                      <Run Text="  ETA: "/>
+                      <Run Text="{Binding DeliveryDays}"/>
+                      <Run Text=" days"/>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+
+                        <Button Content="{Binding SelectedRateText}"
+                    Command="{Binding PurchaseLabelCommand}"
+                    IsEnabled="{Binding CanPurchaseLabel}"
+                    Height="36"
+                    Background="DarkGreen"
+                    Foreground="White"
+                    HorizontalAlignment="Left"/>
+
+                        <TextBlock Text="{Binding Status}"
+                       Foreground="DarkBlue"
+                       Margin="0,12,0,0"
+                       TextWrapping="Wrap"/>
+
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Row 3: Clear / Cancel -->
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,12,0,0">
+            <Button Content="Clear" Width="80" Command="{Binding CancelCommand}"/>
+        </StackPanel>
+    </Grid>
+</Page>

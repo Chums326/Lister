@@ -1,0 +1,151 @@
+﻿// Model class for User accounts
+public class User
+{
+    public string Username { get; set; }
+    public string Email { get; set; }
+    public string PasswordHash { get; set; }
+    public bool IsVerified { get; set; }
+    public string VerificationToken { get; set; }
+    public string RememberMeToken { get; set; }
+    public DateTime CreatedAt { get; set; }
+    public DateTime? LastLoginAt { get; set; }
+}
+
+// UserService to manage user data
+public class UserService
+{
+    private readonly string _usersFilePath;
+    private List<User> _users;
+
+    public UserService(string usersFilePath)
+    {
+        _usersFilePath = usersFilePath;
+        LoadUsers();
+    }
+
+    private void LoadUsers()
+    {
+        if (File.Exists(_usersFilePath))
+        {
+            string json = File.ReadAllText(_usersFilePath);
+            _users = JsonConvert.DeserializeObject<List<User>>(json) ?? new List<User>();
+        }
+        else
+        {
+            _users = new List<User>();
+            SaveUsers();
+        }
+    }
+
+    private void SaveUsers()
+    {
+        string json = JsonConvert.SerializeObject(_users, Formatting.Indented);
+        File.WriteAllText(_usersFilePath, json);
+    }
+
+    public bool CreateUser(string username, string email, string password)
+    {
+        // Check if username or email already exists
+        if (_users.Any(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase) || 
+                           u.Email.Equals(email, StringComparison.OrdinalIgnoreCase)))
+        {
+            return false;
+        }
+
+        // Hash the password using BCrypt
+        string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password);
+        
+        // Generate verification token
+        string verificationToken = Guid.NewGuid().ToString();
+
+        var newUser = new User
+        {
+            Username = username,
+            Email = email,
+            PasswordHash = hashedPassword,
+            IsVerified = false,
+            VerificationToken = verificationToken,
+            CreatedAt = DateTime.UtcNow
+        };
+
+        _users.Add(newUser);
+        SaveUsers();
+
+        // Send verification email
+        SendVerificationEmail(email, verificationToken);
+        
+        return true;
+    }
+
+    public User GetUserByUsername(string username)
+    {
+        return _users.FirstOrDefault(u => u.Username.Equals(username, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public User GetUserByEmail(string email)
+    {
+        return _users.FirstOrDefault(u => u.Email.Equals(email, StringComparison.OrdinalIgnoreCase));
+    }
+
+    public bool VerifyUser(string token)
+    {
+        var user = _users.FirstOrDefault(u => u.VerificationToken == token);
+        if (user == null)
+            return false;
+
+        user.IsVerified = true;
+        user.VerificationToken = null;
+        SaveUsers();
+
+        // Send welcome email
+        SendWelcomeEmail(user.Email, user.Username);
+
+        return true;
+    }
+
+    public bool ValidateLogin(string username, string password)
+    {
+        var user = GetUserByUsername(username);
+        if (user == null)
+            return false;
+
+        if (!user.IsVerified)
+            return false;
+
+        bool passwordMatches = BCrypt.Net.BCrypt.Verify(password, user.PasswordHash);
+        if (passwordMatches)
+        {
+            user.LastLoginAt = DateTime.UtcNow;
+            SaveUsers();
+        }
+
+        return passwordMatches;
+    }
+
+    public void SaveRememberMeToken(string username)
+    {
+        var user = GetUserByUsername(username);
+        if (user != null)
+        {
+            user.RememberMeToken = Guid.NewGuid().ToString();
+            SaveUsers();
+            
+            // Save to application settings
+            Properties.Settings.Default.RememberMeToken = user.RememberMeToken;
+            Properties.Settings.Default.Username = username;
+            Properties.Settings.Default.Save();
+        }
+    }
+
+    public User ValidateRememberMeToken(string username, string token)
+    {
+        var user = GetUserByUsername(username);
+        if (user != null && user.RememberMeToken == token && user.IsVerified)
+        {
+            user.LastLoginAt = DateTime.UtcNow;
+            SaveUsers();
+            return user;
+        }
+        return null;
+    }
+}

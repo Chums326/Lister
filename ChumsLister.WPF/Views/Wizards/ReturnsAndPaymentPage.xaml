@@ -1,0 +1,168 @@
+﻿<Page x:Class="ChumsLister.WPF.Views.Wizards.ReturnsAndPaymentPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      Title="Returns and Payment">
+
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="Returns and Payment" Style="{StaticResource TitleStyle}"/>
+            <TextBlock Text="Set your return policy and payment options" 
+                       Margin="0,0,0,20" Foreground="{StaticResource TextMediumBrush}"/>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="1">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Left Column: Returns -->
+                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                    <Border Style="{StaticResource CardStyle}" Padding="15">
+                        <StackPanel>
+                            <TextBlock Text="Return Policy" Style="{StaticResource SubtitleStyle}"/>
+
+                            <RadioButton x:Name="rbReturnsAccepted" 
+                                         GroupName="Returns"
+                                         Content="Returns Accepted" 
+                                         IsChecked="True"
+                                         Margin="0,15,0,5"
+                                         Checked="Returns_Changed"/>
+
+                            <RadioButton x:Name="rbNoReturns" 
+                                         GroupName="Returns"
+                                         Content="No Returns Accepted" 
+                                         Margin="0,5,0,0"
+                                         Checked="Returns_Changed"/>
+
+                            <StackPanel x:Name="pnlReturnDetails" Margin="0,15,0,0">
+                                <TextBlock Text="Return Period:" 
+                                           FontWeight="SemiBold" 
+                                           Margin="0,0,0,5"/>
+                                <ComboBox x:Name="cboReturnPeriod" 
+                                          Style="{StaticResource ComboBoxStyle}">
+                                    <ComboBoxItem Content="14 days" Tag="Days_14"/>
+                                    <ComboBoxItem Content="30 days" Tag="Days_30" IsSelected="True"/>
+                                    <ComboBoxItem Content="60 days" Tag="Days_60"/>
+                                </ComboBox>
+
+                                <TextBlock Text="Refund Type:" 
+                                           FontWeight="SemiBold" 
+                                           Margin="0,15,0,5"/>
+                                <ComboBox x:Name="cboRefundType" 
+                                          Style="{StaticResource ComboBoxStyle}">
+                                    <ComboBoxItem Content="Money Back" Tag="MoneyBack" IsSelected="True"/>
+                                    <ComboBoxItem Content="Money back or replacement" Tag="MoneyBackOrReplacement"/>
+                                </ComboBox>
+
+                                <TextBlock Text="Return Shipping Paid By:" 
+                                           FontWeight="SemiBold" 
+                                           Margin="0,15,0,5"/>
+                                <RadioButton x:Name="rbBuyerPaysReturn" 
+                                             GroupName="ReturnShipping"
+                                             Content="Buyer" 
+                                             IsChecked="True"/>
+                                <RadioButton x:Name="rbSellerPaysReturn" 
+                                             GroupName="ReturnShipping"
+                                             Content="Seller" 
+                                             Margin="0,5,0,0"/>
+
+                                <TextBlock Text="Additional Return Policy Details:" 
+                                           FontWeight="SemiBold" 
+                                           Margin="0,15,0,5"/>
+                                <TextBox x:Name="txtReturnPolicyDetails" 
+                                         Style="{StaticResource TextBoxStyle}"
+                                         TextWrapping="Wrap"
+                                         AcceptsReturn="True"
+                                         Height="80"
+                                         MaxLength="5000"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!-- Right Column: Payment -->
+                <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                    <Border Style="{StaticResource CardStyle}" Padding="15">
+                        <StackPanel>
+                            <TextBlock Text="Payment Options" Style="{StaticResource SubtitleStyle}"/>
+
+                            <TextBlock Text="Payment Methods:" 
+                                       FontWeight="SemiBold" 
+                                       Margin="0,15,0,5"/>
+
+                            <CheckBox x:Name="chkPayPal" 
+                                      Content="PayPal" 
+                                      IsChecked="True" 
+                                      IsEnabled="False"
+                                      Margin="0,5,0,0"/>
+
+                            <CheckBox x:Name="chkCreditCard" 
+                                      Content="Credit/Debit Cards (via eBay Managed Payments)" 
+                                      IsChecked="True"
+                                      IsEnabled="False"
+                                      Margin="0,5,0,0"/>
+
+                            <CheckBox x:Name="chkGooglePay" 
+                                      Content="Google Pay" 
+                                      IsChecked="True"
+                                      Margin="0,5,0,0"/>
+
+                            <CheckBox x:Name="chkApplePay" 
+                                      Content="Apple Pay" 
+                                      IsChecked="True"
+                                      Margin="0,5,0,0"/>
+
+                            <TextBlock Text="Note: Payment methods are managed by eBay's payment system" 
+                                       Foreground="{StaticResource TextMediumBrush}"
+                                       FontStyle="Italic"
+                                       TextWrapping="Wrap"
+                                       Margin="0,10,0,0"/>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Style="{StaticResource CardStyle}" 
+                            Padding="15" 
+                            Margin="0,15,0,0">
+                        <StackPanel>
+                            <TextBlock Text="Business Policies" Style="{StaticResource SubtitleStyle}"/>
+
+                            <CheckBox x:Name="chkUseBusinessPolicies" 
+                                      Content="Use Business Policies" 
+                                      Margin="0,10,0,5"
+                                      Checked="chkUseBusinessPolicies_Checked"
+                                      Unchecked="chkUseBusinessPolicies_Unchecked"/>
+
+                            <StackPanel x:Name="pnlBusinessPolicies" 
+                                        Visibility="Collapsed">
+                                <TextBlock Text="Payment Policy:" 
+                                           FontWeight="SemiBold" 
+                                           Margin="0,10,0,5"/>
+                                <ComboBox x:Name="cboPaymentPolicy" 
+                                          Style="{StaticResource ComboBoxStyle}"/>
+
+                                <TextBlock Text="Return Policy:" 
+                                           FontWeight="SemiBold" 
+                                           Margin="0,10,0,5"/>
+                                <ComboBox x:Name="cboReturnPolicy" 
+                                          Style="{StaticResource ComboBoxStyle}"/>
+
+                                <TextBlock Text="Shipping Policy:" 
+                                           FontWeight="SemiBold" 
+                                           Margin="0,10,0,5"/>
+                                <ComboBox x:Name="cboShippingPolicy" 
+                                          Style="{StaticResource ComboBoxStyle}"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Page>
